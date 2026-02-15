@@ -1,4 +1,23 @@
 import { AuthError } from "@supabase/supabase-js";
+import type { ErrorService } from "supabase-error-translator-js/dist/types";
+import { setLanguage, translateErrorCode } from "supabase-error-translator-js";
+
+setLanguage("ko");
+
+export function generateErrorMessage(
+  error: unknown,
+  service: ErrorService = "auth",
+) {
+  if (error instanceof AuthError && error.code) {
+    return (
+      AUTH_ERROR_MESSAGE_MAP[error.code] ??
+      // * supabase error 메시지 번역 라이브러리
+      // translateErrorCode(error.code, service) ??
+      "알 수 없는 인증 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+    );
+  }
+  return "문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
+}
 
 const AUTH_ERROR_MESSAGE_MAP: Record<string, string> = {
   email_exists: "이미 사용 중인 이메일입니다.",
@@ -22,13 +41,3 @@ const AUTH_ERROR_MESSAGE_MAP: Record<string, string> = {
   same_password: "이전과 동일한 비밀번호는 사용할 수 없습니다.",
   validation_failed: "이메일 주소가 올바르게 입력되지 않았습니다",
 };
-
-export function generateErrorMessage(error: unknown) {
-  if (error instanceof AuthError && error.code) {
-    return (
-      AUTH_ERROR_MESSAGE_MAP[error.code] ??
-      "알 수 없는 인증 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-    );
-  }
-  return "문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
-}
