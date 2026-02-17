@@ -13,6 +13,6 @@ export default function SessionProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  if (!isSessionLoaded) return <div>로딩중...</div>;
+  if (!isSessionLoaded) return <GlobalLoader />;
   return children;
 }
