@@ -14,6 +14,7 @@ export default function PostFeed() {
       {data.map((post) => (
         <PostItem key={post.id} {...post} />
       ))}
+      <div></div>
     </div>
   );
 }
