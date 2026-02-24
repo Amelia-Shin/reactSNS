@@ -47,7 +47,6 @@ export async function createPostWithImages({
       }),
     );
 
-    console.log("aa");
     // 3. 포스트 테이블 업데이트
     const updatedPost = await updatePost({
       id: post.id,
@@ -63,22 +62,6 @@ export async function createPostWithImages({
     ]);
     throw error;
   }
-
-  // // 2. 이미지 업로드
-  // const imageUrls = await Promise.all(
-  //   images.map((image) => {
-  //     const fileExtension = image.name.split(".").pop() || "webp";
-  //     const fileName = `${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
-  //     const filePath = `${userId}/${post.id}/${fileName}`;
-
-  //     return uploadImage({ file: image, filePath });
-  //   }),
-  // );
-
-  // // 3. 포스트 테이블 업데이트
-  // const updatedPost = await updatePost({ id: post.id, image_urls: imageUrls });
-
-  // return updatePost;
 }
 
 export async function updatePost(post: Partial<PostEntity> & { id: number }) {
