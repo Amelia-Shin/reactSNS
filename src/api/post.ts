@@ -43,7 +43,6 @@ export async function createPostWithImages({
 
   try {
     // 2. 이미지 업로드
-
     const imageUrls = await Promise.all(
       images.map((image) => {
         const fileExtension = image.name.split(".").pop() || "webp";
