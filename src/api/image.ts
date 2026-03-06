@@ -30,15 +30,18 @@ export async function deleteImages(filePath: string[]) {
   return data;
 }
 
-// export async function deleteImagesInPath(path: string) {
-//   const { data: files, error: fetchFilesError } = await supabase.storage
-//     .from(BUCKET_NAME)
-//     .list(path);
-//   if (fetchFilesError) throw fetchFilesError;
+export async function deleteImagesInPath(path: string) {
+  const { data: files, error: fetchFilesError } = await supabase.storage
+    .from(BUCKET_NAME)
+    .list(path);
 
-//   const { error: removeError } = await supabase.storage
-//     .from(BUCKET_NAME)
-//     .remove(files.map((file) => `${path}/${file.name}`));
+  if (!files || files.length === 0) return;
 
-//   if (removeError) throw removeError;
-// }
+  if (fetchFilesError) throw fetchFilesError;
+
+  const { error: removeError } = await supabase.storage
+    .from(BUCKET_NAME)
+    .remove(files.map((file) => `${path}/${file.name}`));
+
+  if (removeError) throw removeError;
+}
