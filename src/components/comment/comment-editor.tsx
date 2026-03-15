@@ -17,13 +17,22 @@ type EditMode = {
   onClose: () => void;
 };
 
-type Props = CreateMode | EditMode;
+type ReplyMode = {
+  type: "REPLY";
+  postId: number;
+  parentCommentId: number;
+  rootCommentId: number;
+  onClose: () => void;
+};
+
+type Props = CreateMode | EditMode | ReplyMode;
 
 export default function CommentEditor(props: Props) {
   const { mutate: createComment, isPending: isCreateCommentPending } =
     useCreateComment({
       onSuccess: () => {
         setContent("");
+        if (props.type === "REPLY") props.onClose();
       },
       onError: (error) => {
         toast.error("댓글 추가에 실패했습니다", { position: "top-center" });
@@ -53,6 +62,13 @@ export default function CommentEditor(props: Props) {
 
     if (props.type === "CREATE") {
       createComment({ postId: props.postId, content });
+    } else if (props.type === "REPLY") {
+      createComment({
+        postId: props.postId,
+        content,
+        parentCommentId: props.parentCommentId,
+        rootCommentId: props.rootCommentId,
+      });
     } else {
       updateComment({ id: props.commentId, content });
     }
@@ -67,8 +83,8 @@ export default function CommentEditor(props: Props) {
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
-      <div className="flex justify-end">
-        {props.type === "EDIT" && (
+      <div className="flex justify-end gap-2">
+        {(props.type === "EDIT" || props.type === "REPLY") && (
           <Button
             disabled={isPending}
             variant={"outline"}
