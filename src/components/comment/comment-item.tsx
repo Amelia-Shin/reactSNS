@@ -66,7 +66,7 @@ export default function CommentItem(props: NestedComment) {
               onClose={toggleIsEditing}
             />
           ) : (
-            <div>
+            <div className="break-all">
               {isOverTwoLevels && (
                 <span className="font-bold text-blue-500">
                   @{props.parentComment?.author.nickname}&nbsp;
